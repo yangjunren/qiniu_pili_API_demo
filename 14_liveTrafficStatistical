@@ -1,0 +1,91 @@
+# -*- coding: utf-8 -*-
+from qiniu import QiniuMacAuth, http
+import json
+
+
+def upflowTrafficStatistical(access_key, secret_key, begin, end, hub=None):
+    """
+    直播流量统计：上行流量统计
+    https://developer.qiniu.com/pili/kb/5034/live-traffic-statistical-query-interface
+    :param access_key: 公钥
+    :param secret_key: 私钥
+    :param begin: 开始时间
+    :param end: 截止时间
+    :param hubname: 直播空间
+
+    :return:
+            {
+                "code": 200
+            }
+    """
+    auth = QiniuMacAuth(access_key, secret_key)
+    if hub is None:
+        # 请求URL
+        url = f"http://pili.qiniuapi.com/statd/upflow?begin={begin}&end={end}&g=day&select=flow"
+    else:
+        # 请求URL
+        url = f"http://pili.qiniuapi.com/statd/upflow?begin={begin}&end={end}&g=day&select=flow&group={hub}"
+
+    # 发起POST请求
+    ret, res = http._get_with_qiniu_mac(url, params=None, auth=auth)
+    headers = {"code": res.status_code, "reqid": res.req_id, "xlog": res.x_log}
+
+    # 格式化响应体
+    Headers = json.dumps(headers, indent=4, ensure_ascii=False)
+    result = json.dumps(ret, indent=4, ensure_ascii=False)
+    return Headers, result
+
+
+def downflowTrafficStatistical(access_key, secret_key, begin, end, hub=None):
+    """
+    直播流量统计：下行流量统计
+    https://developer.qiniu.com/pili/kb/5034/live-traffic-statistical-query-interface
+    :param access_key: 公钥
+    :param secret_key: 私钥
+    :param begin: 开始时间
+    :param end: 截止时间
+    :param hubname: 直播空间
+
+    :return:
+            {
+                "code": 200
+            }
+    """
+    auth = QiniuMacAuth(access_key, secret_key)
+    if hub is None:
+        # 请求URL
+        url = f"http://pili.qiniuapi.com/statd/downflow?begin={begin}&end={end}&g=day&select=flow"
+    else:
+        # 请求URL
+        url = f"http://pili.qiniuapi.com/statd/downflow?begin={begin}&end={end}&g=day&select=flow&group={hub}"
+
+    # 发起POST请求
+    ret, res = http._get_with_qiniu_mac(url, params=None, auth=auth)
+    headers = {"code": res.status_code, "reqid": res.req_id, "xlog": res.x_log}
+
+    # 格式化响应体
+    Headers = json.dumps(headers, indent=4, ensure_ascii=False)
+    result = json.dumps(ret, indent=4, ensure_ascii=False)
+    return Headers, result
+
+
+if __name__ == '__main__':
+    # 七牛账号 AK、SK
+    access_key = "<access_key>"
+    secret_key = "<secret_key>"
+
+    # 直播空间
+    hub = ""
+
+    # 开始时间
+    begin = "20151201000000"
+    # 结束时间
+    end = "20151203000000"
+
+    # 查询上行流量
+    headers, result = upflowTrafficStatistical(access_key, secret_key, begin, end, hub)
+    print(f'{headers}\n{result}')
+
+    # 查询下行流量
+    headers, result = downflowTrafficStatistical(access_key, secret_key, begin, end, hub)
+    print(f'{headers}\n{result}')
