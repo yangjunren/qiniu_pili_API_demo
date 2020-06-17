@@ -31,12 +31,13 @@ def liveOnliePeopleInfo(access_key, secret_key, hubname):
     return Headers, result
 
 
-# 七牛账号 AK、SK
-access_key = "<access_key>"
-secret_key = "<secret_key>"
+if __name__ == '__main__':
+    # 七牛账号 AK、SK
+    access_key = "<access_key>"
+    secret_key = "<secret_key>"
+    
+    # 直播空间
+    hub = ""
 
-# 直播空间
-hub = ""
-
-headers, result = liveOnliePeopleInfo(access_key, secret_key, hub)
-print(f'{headers}\n{result}')
+    headers, result = liveOnliePeopleInfo(access_key, secret_key, hub)
+    print(f'{headers}\n{result}')
